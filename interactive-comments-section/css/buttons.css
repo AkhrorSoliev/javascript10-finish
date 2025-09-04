@@ -89,19 +89,47 @@
   border: 0;
 }
 
+.btn- .btn-counter:focus {
+  outline: none;
+}
+
 .btn-counter-container {
+  display: inline-block;
+  background-color: var(--color-grey-50);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 1rem;
+}
+
+.btn-counter-wrapper {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--color-grey-50);
-  border-radius: 1rem;
-  padding: 1.5rem 0.5rem;
+  justify-content: center;
 }
 
 .btn-counter {
   cursor: pointer;
+  display: flex;
+  padding-top: 1.55rem;
+  padding-bottom: 1.55rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.btn-counter:focus {
+  outline: 0;
+}
+
+.btn-counter:hover svg path {
+  fill: var(--color-purple-600);
 }
 
 .amount {
+  width: 30px;
+  height: 24px;
+  text-align: center;
   font-weight: 500;
+  color: var(--color-purple-600);
+  overflow: hidden;
 }
