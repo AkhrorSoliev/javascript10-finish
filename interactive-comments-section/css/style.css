@@ -141,12 +141,12 @@ button {
 }
 
 /* MAIN */
-
 .comment-cards {
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
 }
+
 .comment-card__item {
   background-color: var(--color-white);
   padding: 1.6rem;
@@ -156,12 +156,15 @@ button {
   grid-template-areas:
     "vote meta   actions"
     "vote body   actions";
-  gap: clamp(0.8rem, 1.2vw, 1.6rem);
+  gap: clamp(1.6rem, 1.2vw, 2.4rem);
   align-items: start;
 }
 
 .comment-card__header {
   grid-area: meta;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
 }
 
 .comment-card__avatar {
@@ -184,9 +187,6 @@ button {
 
 .btn-counter-container {
   grid-area: vote;
-}
-
-.btn-counter-wrapper {
 }
 
 .btn-counter {
@@ -218,45 +218,17 @@ button {
   align-items: start;
 }
 
-.vote {
-  grid-area: vote;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.meta {
-  grid-area: meta;
-  display: flex;
-  gap: 10px;
-  min-width: 0;
-}
-.body {
-  grid-area: body;
-  min-width: 0;
-} 
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  flex-wrap: nowrap;
-  min-width: max-content;
-}
-
-/* <= 640px: actionlar pastga tushadi, lekin *bir qatorda* */
 @media (max-width: 640px) {
-  .comment {
-    grid-template-columns: 1fr auto; /* text | actions */
+  .comment-card__item {
+    grid-template-columns: 1fr auto;
     grid-template-areas:
-      "meta    actions"
+      "meta    meta"
       "body    body"
-      "vote    vote"; /* vote pastga */
+      "vote    actions";
+    align-items: center;
   }
 
-  .vote {
-    flex-direction: row;
-    justify-content: flex-start;
-  } /* + 12 − gorizontal */
-  .actions {
-    justify-self: end;
-  } /* Reply yuqori o'ngda turadi */
+  .btn-counter-container {
+    justify-self: start;
+  }
 }
