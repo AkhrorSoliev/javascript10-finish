@@ -98,13 +98,15 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: 1rem;
+  align-self: center;
 }
 
 .btn-counter-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  width: 90px;
+  width: 30px;
+  flex-direction: column;
 }
 
 .btn-counter {
@@ -114,6 +116,9 @@
   padding-bottom: 1.55rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+  svg path {
+    transition: 0.3s;
+  }
 }
 
 .btn-counter:focus {
@@ -131,4 +136,11 @@
   font-weight: 500;
   color: var(--color-purple-600);
   overflow: hidden;
+}
+
+@media screen and (max-width: 640px) {
+  .btn-counter-wrapper {
+    flex-direction: row;
+    width: 100px;
+  }
 }
