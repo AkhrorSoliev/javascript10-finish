@@ -106,6 +106,8 @@ body {
   font-family: var(--main-font);
   font-size: var(--text-preset2m-size);
   line-height: var(--text-preset2m-line-height);
+  background-color: var(--color-grey-50);
+  color: var(--color-grey-500);
 }
 
 h1 {
@@ -114,6 +116,7 @@ h1 {
 
 main {
   flex-grow: 1;
+  padding: 3.2rem 1.6rem;
 }
 
 input,
@@ -135,4 +138,125 @@ button {
   max-width: 830px;
   margin-inline: auto;
   padding-inline: 5rem;
+}
+
+/* MAIN */
+
+.comment-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.comment-card__item {
+  background-color: var(--color-white);
+  padding: 1.6rem;
+  border-radius: 0.8rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "vote meta   actions"
+    "vote body   actions";
+  gap: clamp(0.8rem, 1.2vw, 1.6rem);
+  align-items: start;
+}
+
+.comment-card__header {
+  grid-area: meta;
+}
+
+.comment-card__avatar {
+}
+
+.comment-card__username {
+  color: var(--color-grey-800);
+  font-weight: 500;
+}
+
+.comment-card__time {
+}
+
+.comment-card__body {
+  grid-area: body;
+}
+
+.comment-card__footer {
+}
+
+.btn-counter-container {
+  grid-area: vote;
+}
+
+.btn-counter-wrapper {
+}
+
+.btn-counter {
+}
+.btn-increase {
+}
+.amount {
+}
+.btn-decrease {
+}
+.btn {
+}
+.btn-outline {
+}
+.btn-outline-primary {
+}
+
+.comment-card__reply-btn {
+  grid-area: actions;
+}
+
+.comment {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* vote | text | reply */
+  grid-template-areas:
+    "vote meta   actions"
+    "vote body   actions";
+  gap: clamp(8px, 1.2vw, 16px);
+  align-items: start;
+}
+
+.vote {
+  grid-area: vote;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.meta {
+  grid-area: meta;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+.body {
+  grid-area: body;
+  min-width: 0;
+} 
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+/* <= 640px: actionlar pastga tushadi, lekin *bir qatorda* */
+@media (max-width: 640px) {
+  .comment {
+    grid-template-columns: 1fr auto; /* text | actions */
+    grid-template-areas:
+      "meta    actions"
+      "body    body"
+      "vote    vote"; /* vote pastga */
+  }
+
+  .vote {
+    flex-direction: row;
+    justify-content: flex-start;
+  } /* + 12 − gorizontal */
+  .actions {
+    justify-self: end;
+  } /* Reply yuqori o'ngda turadi */
 }
