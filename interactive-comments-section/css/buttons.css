@@ -98,7 +98,7 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: 1rem;
-  align-self: center;
+  /* align-self: center; */
 }
 
 .btn-counter-wrapper {
