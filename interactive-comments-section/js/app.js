@@ -2,6 +2,31 @@ import { axiosInstance } from "./request.js";
 const template = document.getElementById("comment-card");
 const commentCards = document.querySelector(".comment-cards");
 const commentReplies = document.getElementById("comment-replies");
+const commentReply = document.getElementById("comment-reply");
+
+window.replyButton = function (btn) {
+  document
+    .querySelector(".comment-cards")
+    .querySelectorAll(".reply-container")
+    .forEach((item) => item.remove());
+
+  const parentEl = btn.closest("li");
+  const clone = commentReply.content.cloneNode(true);
+
+  if (parentEl.classList.contains("comment-card__element")) {
+    const comments = parentEl.querySelector(".comment-replies");
+    if (comments.children.length == 0) {
+      parentEl.after(clone);
+    } else {
+      comments.before(clone);
+    }
+  }
+
+  if (parentEl.classList.contains("comment-card__item")) {
+    parentEl.style.marginBottom = "1.6rem";
+    parentEl.after(clone);
+  }
+};
 
 let currentUser;
 
@@ -20,7 +45,7 @@ const rendeReplies = (replies, container) => {
     const card__body = clone.querySelector(".comment-card__body");
     const card__amount = clone.querySelector(".amount");
     const card__owner = clone.querySelector(".comment-card__owner");
-    console.log(card__owner);
+
     if (currentUser.username == user.username) {
       card__owner.style.display = "block";
     }
