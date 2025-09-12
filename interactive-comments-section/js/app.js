@@ -4,6 +4,41 @@ const commentCards = document.querySelector(".comment-cards");
 const commentReplies = document.getElementById("comment-replies");
 const commentReply = document.getElementById("comment-reply");
 
+let controller = null;
+
+async function voteLatest(id, delta) {
+  // Agar avvalgi so'rov bor bo'lsa — uni bekor qilamiz
+  if (controller) {
+    controller.abort();
+  }
+
+  // Yangi AbortController yaratamiz
+  controller = new AbortController();
+
+  try {
+    // Optimistic UI (darhol hisobni yangilash)
+    updateLocalUI(id, delta);
+
+    const res = await axios.patch(
+      `/api/comments/${id}/vote`,
+      { delta },
+      { signal: controller.signal } // bu yerda signal yuborilyapti
+    );
+
+    console.log("✅ Serverdan javob:", res.data);
+  } catch (err) {
+    if (axios.isCancel(err)) {
+      console.log("❌ So‘rov bekor qilindi");
+    } else if (err.name === "CanceledError") {
+      console.log("❌ So‘rov bekor qilindi (AbortController)");
+    } else {
+      console.error("❌ Xato:", err);
+      // Rollback UI agar xato bo'lsa
+      updateLocalUI(id, -delta);
+    }
+  }
+}
+
 window.replyButton = function (btn) {
   document
     .querySelector(".comment-cards")
