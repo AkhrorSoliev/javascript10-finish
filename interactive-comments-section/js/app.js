@@ -4,41 +4,6 @@ const commentCards = document.querySelector(".comment-cards");
 const commentReplies = document.getElementById("comment-replies");
 const commentReply = document.getElementById("comment-reply");
 
-let controller = null;
-
-async function voteLatest(id, delta) {
-  // Agar avvalgi so'rov bor bo'lsa — uni bekor qilamiz
-  if (controller) {
-    controller.abort();
-  }
-
-  // Yangi AbortController yaratamiz
-  controller = new AbortController();
-
-  try {
-    // Optimistic UI (darhol hisobni yangilash)
-    updateLocalUI(id, delta);
-
-    const res = await axios.patch(
-      `/api/comments/${id}/vote`,
-      { delta },
-      { signal: controller.signal } // bu yerda signal yuborilyapti
-    );
-
-    console.log("✅ Serverdan javob:", res.data);
-  } catch (err) {
-    if (axios.isCancel(err)) {
-      console.log("❌ So‘rov bekor qilindi");
-    } else if (err.name === "CanceledError") {
-      console.log("❌ So‘rov bekor qilindi (AbortController)");
-    } else {
-      console.error("❌ Xato:", err);
-      // Rollback UI agar xato bo'lsa
-      updateLocalUI(id, -delta);
-    }
-  }
-}
-
 window.replyButton = function (btn) {
   document
     .querySelector(".comment-cards")
@@ -63,9 +28,31 @@ window.replyButton = function (btn) {
   }
 };
 
+window.increment = async function (btn) {
+  if (btn.dataset.name == "reply") {
+    const mainId = btn.dataset.mainId;
+    const commentId = btn.dataset.commentId;
+    const res = await axiosInstance(`/comments/${mainId}`);
+    const comment = {
+      ...res.data.replies.find((item) => item.id == commentId),
+    };
+    comment.score = comment.score + 1;
+    console.log(comment);
+    // const req = await axiosInstance(`/comments/${mainId}`, {
+    //   method: "PUT",
+    //   body: res.data,
+    // });
+    // console.log(req);
+  }
+};
+
+window.decrement = function (btn) {
+  console.log(btn);
+};
+
 let currentUser;
 
-const rendeReplies = (replies, container) => {
+const rendeReplies = (replies, container, mainId) => {
   replies.forEach((reply) => {
     const { id, content, createdAt, score, user, replyingTo } = reply;
     const clone = commentReplies.content.cloneNode(true);
@@ -80,6 +67,8 @@ const rendeReplies = (replies, container) => {
     const card__body = clone.querySelector(".comment-card__body");
     const card__amount = clone.querySelector(".amount");
     const card__owner = clone.querySelector(".comment-card__owner");
+    const card_increment_btn = clone.querySelector(".btn-increase");
+    const card_decrement_btn = clone.querySelector(".btn-decrease");
 
     if (currentUser.username == user.username) {
       card__owner.style.display = "block";
@@ -90,6 +79,10 @@ const rendeReplies = (replies, container) => {
     card__time.textContent = createdAt;
     card__body.innerHTML = `<a href="#" class="comment-card__replyTo"> @${replyingTo}</a> ${content}`;
     card__amount.textContent = score;
+    card_increment_btn.dataset.commentId = id;
+    card_decrement_btn.dataset.commentId = id;
+    card_decrement_btn.dataset.mainId = mainId;
+    card_increment_btn.dataset.mainId = mainId;
 
     if (user?.image?.webp && sourceWebp) {
       sourceWebp.srcset = user.image.webp;
@@ -122,12 +115,17 @@ const renderComment = (comments) => {
     const card__time = clone.querySelector(".comment-card__time");
     const card__body = clone.querySelector(".comment-card__body");
     const card__amount = clone.querySelector(".amount");
+    const card_increment_btn = clone.querySelector(".btn-increase");
+    const card_decrement_btn = clone.querySelector(".btn-decrease");
 
     // give data to seleted elements
     card__username.textContent = user.username;
     card__time.textContent = createdAt;
     card__body.textContent = content;
     card__amount.textContent = score;
+    card_increment_btn.dataset.commentId = id;
+    card_decrement_btn.dataset.commentId = id;
+
     if (user?.image?.webp && sourceWebp) {
       sourceWebp.srcset = user.image.webp;
     }
@@ -141,7 +139,7 @@ const renderComment = (comments) => {
     // replies rendering
     if (replies.length > 0) {
       const commentReplies = clone.querySelector(".comment-replies");
-      rendeReplies(replies, commentReplies);
+      rendeReplies(replies, commentReplies, id);
     }
 
     // rendering cart to ui
